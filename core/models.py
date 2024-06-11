@@ -11,9 +11,12 @@ class ModelBase(models.Model):
     class Meta:
         abstract = True
     
-    def delete(self, *args, **kwargs):
-        self.state = False
-        self.save()
+    def delete(self,physical=False, *args, **kwargs):
+        if physical:
+            super().delete(*args, **kwargs)
+        else:
+            self.state = False
+            self.save()
 
 
 class ActiveManager(models.Manager):
