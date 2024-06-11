@@ -16,7 +16,8 @@ from django.urls import reverse
 from django.db.models import Exists, OuterRef, Subquery
 
 def probar_orm():
-    #INSERCIONES
+    # INSERCIONES
+    # Bulk_Create
     def bulk_create_periods():
         user = User.objects.get(id=1)
         periods = [
@@ -85,4 +86,50 @@ def probar_orm():
         Student.objects.bulk_create(students)
     # bulk_create_students()
 
+    # Create y Save
+    def create_grade(period_id, professor_id, subject_id):
+        user = User.objects.get(id=1)
+        period = Period.objects.get(id=period_id)
+        subject = Subject.objects.get(id=subject_id)
+        professor = Professor.objects.get(id=professor_id)
 
+        Grade.objects.create(
+            user=user,
+            period = period,
+            subject = subject,
+            professor = professor
+        )
+    # create_grade(8, 2, 3)
+    # create_grade(8, 4, 6)
+    # create_grade(8, 1, 5)
+    # create_grade(6, 7, 2)
+    # create_grade(6, 7, 9)
+    # create_grade(5, 3, 8)
+    # create_grade(2, 10, 4)
+    # create_grade(7, 6, 1)
+    # create_grade(9, 5, 7)
+    # create_grade(4, 8, 10)
+
+    def save_grade_detail(grade_id, student_id, score1, score2, extension):
+        user = User.objects.get(id=1)
+        grade = Grade.objects.get(id=grade_id)
+        student = Student.objects.get(id=student_id)
+        grade_detail = GradeDetail(
+            user=user,
+            grade = grade,
+            student = student,
+            score1 = score1,
+            score2 = score2,
+            extension = extension
+        )
+        grade_detail.save()
+    # save_grade_detail(1, 2, 8.5, 9.3, 7.4)
+    # save_grade_detail(3, 4, 6.2, 7.8, 8.1)
+    # save_grade_detail(5, 6, 9.0, 8.7, 6.5)
+    # save_grade_detail(7, 8, 5.3, 6.6, 7.9)
+    # save_grade_detail(10, 1, 9.2, 8.0, 7.6)
+    # save_grade_detail(9, 10, 7.1, 8.2, 9.4)
+    # save_grade_detail(2, 3, 6.9, 5.8, 7.2)
+    # save_grade_detail(4, 5, 8.3, 9.1, 6.7)
+    # save_grade_detail(6, 7, 7.5, 8.9, 9.0)
+    # save_grade_detail(8, 9, 6.4, 7.7, 8.8)
