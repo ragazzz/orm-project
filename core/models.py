@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -25,7 +26,9 @@ class ActiveManager(models.Manager):
 
 
 class Period(ModelBase):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100, null=True)
+    start_date = models.DateField(default=date.today)
+    end_date = models.DateField(default=date.today)
 
     objects = models.Manager()
     active_objects = ActiveManager()
@@ -46,7 +49,7 @@ class Subject(ModelBase):
 
 
 class Professor(ModelBase):
-    identification = models.CharField(max_length=100)
+    idcard = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
 
     objects = models.Manager()
@@ -56,7 +59,7 @@ class Professor(ModelBase):
         return self.name
     
 class Student(ModelBase):
-    identification = models.CharField(max_length=100)
+    idcard = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
 
     objects = models.Manager()
