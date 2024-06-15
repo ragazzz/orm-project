@@ -1,5 +1,5 @@
 # Shell Plus Model Imports
-from datetime import date
+from datetime import date, datetime
 from core.models import Grade, GradeDetail, Period, Professor, Student, Subject
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group, Permission, User
@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
+from django.db.models.functions import Length
 from django.utils import timezone
 from django.urls import reverse
 from django.db.models import Exists, OuterRef, Subquery
@@ -133,3 +134,125 @@ def probar_orm():
     # save_grade_detail(4, 5, 8.3, 9.1, 6.7)
     # save_grade_detail(6, 7, 7.5, 8.9, 9.0)
     # save_grade_detail(8, 9, 6.4, 7.7, 8.8)
+
+    # Consultas
+
+    # Seleccionar todos los estudiantes cuyo nombre comienza con 'Est'
+    def query_1():
+        students = Student.active_objects.filter(name__istartswith = 'Est')
+        print(students)  
+    # query_1()
+
+    # Seleccionar todos los profesores cuyo nombre contiene 'or'
+    def query_2():
+        professors = Professor.active_objects.filter(name__icontains='or')
+        print(professors)
+    # query_2()
+
+    # Seleccionar todas las asignaturas cuya descripción termina en '10'
+    def query_3():
+        subjects = Subject.active_objects.filter(name__endswith = '10')
+        print(subjects)
+    # query_3()
+
+    # Seleccionar todas las notas con nota1 mayor que 8.0
+    def query_4():
+        scores = GradeDetail.active_objects.filter(score1__gt = 8.0)
+        print(scores)
+    # query_4()
+
+    # Seleccionar todas las notas con nota2 menor que 9.0
+    def query_5():
+        scores = GradeDetail.active_objects.filter(score2__lt = 9)
+        print(scores)
+    # query_5()
+
+    # Seleccionar todas las notas con recuperacion igual a 9.5
+    def query_6():
+        scores = GradeDetail.active_objects.filter(extension = 9.5)
+        print(scores)
+    # query_6()
+
+    # Seleccionar todos los estudiantes cuyo nombre comienza con 'Est' y su cedula termina en '1'
+    def query_7():
+        students = Student.active_objects.filter(Q(name__istartswith = 'est') & Q(idcard__endswith = '1'))
+        print(students)
+    # query_7()
+
+    # Seleccionar todas las asignaturas cuya descripción contiene 'Asig' o termina en '5'
+    def query_8():
+        subjects = Subject.active_objects.filter(Q(name__icontains = 'asig') | Q(name__endswith = '5'))
+        print(subjects)
+    # query_8()
+
+    # Seleccionar todos los profesores cuyo nombre no contiene 'or'
+    def query_9():
+        professors = Professor.active_objects.filter(~Q(name__icontains='or'))
+        print(professors)
+    # query_9()
+
+    # Seleccionar todas las notas con nota1 mayor que 7.0 y nota2 menor que 8.0
+    def query_10():
+        scores = GradeDetail.active_objects.filter(Q(score1__gt = 7) & Q(score2__lt = 8))
+        print(scores)
+    # query_10()
+
+    # Seleccionar todas las notas con recuperacion igual a None o nota2 mayor que 9.0
+    def query_11():
+        scores = GradeDetail.active_objects.filter(Q(extension = None) | Q(score2__gt = 9))
+        print(scores)
+    # query_11()
+
+    # Seleccionar todas las notas con nota1 entre 7.0 y 9.0
+    def query_12():
+        scores = GradeDetail.active_objects.filter(Q(score1__gte = 7) & Q(score1__lte = 9))
+        print(scores)
+    # query_12()
+
+    # Seleccionar todas las notas con nota2 fuera del rango 6.0 a 8.0
+    def query_13():
+        scores = GradeDetail.active_objects.exclude(Q(score2__gte = 6) & Q(score2__lte = 8))
+        print(scores)
+    # query_13()
+
+    # Seleccionar todas las notas cuya recuperacion no sea None
+    def query_14():
+        scores = GradeDetail.active_objects.filter(~Q(extension = None))
+        print(scores)
+    # query_14()
+
+    # Seleccionar todas las notas creadas en el último año
+    def query_15():
+        scores = GradeDetail.active_objects.filter(created__year = datetime.now().year)
+        print(scores)
+    # query_15()
+
+    # Seleccionar todas las notas creadas en el último mes
+    def query_16():
+        scores = GradeDetail.active_objects.filter(created__month = datetime.now().month)
+        print(scores)
+    # query_16()
+
+    # Seleccionar todas las notas creadas en el último día
+    def query_17():
+        scores = GradeDetail.active_objects.filter(created__day = datetime.now().day)
+        print(scores)
+    # query_17()
+
+    # Seleccionar todas las notas creadas antes del año 2023
+    def query_18():
+        scores = GradeDetail.active_objects.filter(created__year__lt = 2023)
+        print(scores)
+    # query_18()
+
+    # Seleccionar todas las notas creadas en marzo de cualquier año
+    def query_19():
+        scores = GradeDetail.active_objects.filter(created__month = 3)
+        print(scores)
+    # query_19()
+
+    # Seleccionar todos los estudiantes cuyo nombre tiene exactamente 10 caracteres:
+    def query_20():
+        students = Student.active_objects.filter(name__regex=r'^.{%d}$'%10)
+        print(students)
+    # query_20()
