@@ -86,7 +86,7 @@ class GradeDetail(ModelBase):
     score1 = models.DecimalField(max_digits=5, decimal_places=2)
     score2 = models.DecimalField(max_digits=5, decimal_places=2)
     extension = models.DecimalField(max_digits=5, decimal_places=2)
-    observation = models.CharField(max_length=100, blank=True)
+    observation = models.CharField(max_length=100, blank=True, null=True)
 
     objects = models.Manager()
     active_objects = ActiveManager()
