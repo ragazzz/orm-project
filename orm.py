@@ -252,19 +252,14 @@ def probar_orm():
         print(scores)
     # query_19()
 
+    # Consultas combinadas con funciones avanzadas
+
     # Seleccionar todos los estudiantes cuyo nombre tiene exactamente 10 caracteres:
     def query_20():
         students = Student.active_objects.filter(name__regex=r'^.{%d}$'%10)
         print(students)
     # query_20()
 
-    # Consultas combinadas con funciones avanzadas
-    print(".........................................")
-    #20. Seleccionar todos los estudiantes cuyo nombre tiene exactamente 10 caracteres:✔️
-    def student_length_10():
-        return Student.objects.filter(name__exact=10)
-    
-    # print("✔️ Estudiantes con nombre de longitud 10 ", student_length_10())
 
     print(".........................................")
     #21. Seleccionar todas las notas con nota1 y nota2 mayores a 7.5:✔️
@@ -300,7 +295,7 @@ def probar_orm():
     #Consultas con subconsultas y anotaciones
     #25. Seleccionar todos los estudiantes con al menos una nota de recuperación:✔️
     def query_25():
-        students = Student.objects.filter(grades__extension__isnull=False).distinct()
+        students = Student.objects.annotate(num_extension = Count('grades_extension')).filter(num_extension__gt = 0)
         return students
     # print("✔️ Estudiantes con al menos una nota de recuperación: ", query_25())
 
