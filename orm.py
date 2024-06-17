@@ -437,3 +437,131 @@ def probar_orm():
             return print(grade_detail)
     # print("✔️ Todas las notas de un estudiante con el detalle de todos sus datos relacionados:")
     # query_40(1)
+
+    # Obtener todas las notas de un período específico
+    def query_41(periodo_id):
+        notas = GradeDetail.objects.filter(grade__period_id=periodo_id)
+        print(notas)
+    #query_41(1)
+
+    # Consultar todas las notas de una asignatura dada en un período
+    def query_42(asignatura_id, periodo_id):
+        notas = GradeDetail.objects.filter(grade__subject_id=asignatura_id, grade__period_id=periodo_id)
+        print(notas)
+    # obtener_notas_por_asignatura_y_periodo(1, 1)
+
+    def query_43(profesor_id):
+        notas = GradeDetail.objects.filter(grade__professor_id=profesor_id)
+        print(notas)
+    # query_43(1)
+
+    #
+    def query_44(estudiante_id, valor):
+        notas = GradeDetail.objects.filter(student_id=estudiante_id).filter(score1__gt=valor)
+        print(notas)
+    #query_44()
+
+    #
+    def query_45(estudiante_id):
+        notas = GradeDetail.objects.filter(student_id=estudiante_id).order_by('grade__period__start_date')
+        print(notas)
+    # query_45()
+
+    # ejercicio_46
+    def query_46(estudiante_id):
+        cantidad = GradeDetail.objects.filter(student_id=estudiante_id).count()
+        print(cantidad)
+    # query_46()
+
+    # ejercicio_47
+    def promedio_notas_por_estudiante_y_periodo(estudiante_id, periodo_id):
+        promedio = GradeDetail.objects.filter(student_id=estudiante_id, grade__period_id=periodo_id).aggregate(Avg('score1'))
+        print(promedio)
+    # promedio_notas_por_estudiante_y_periodo(1, 1)
+
+    # ejercicio_48
+    def obtener_notas_por_observacion(observacion):
+        notas = GradeDetail.objects.filter(observacion=observacion)
+        print(notas)
+    # obtener_notas_por_observacion('Aprobado')
+
+    # ejercicio_49
+    def obtener_notas_por_estudiante_ordenadas_por_asignatura(estudiante_id):
+        notas = GradeDetail.objects.filter(student_id=estudiante_id).order_by('grade__subject__name')
+        print(notas)
+    # obtener_notas_por_estudiante_ordenadas_por_asignatura(1)
+
+    # ejercicio_50
+    def actualizar_nota1():
+        GradeDetail.objects.filter(score1__lt=20).update(score1=20)
+    # actualizar_nota1()
+
+    # ejercicio_51
+    def actualizar_nota2():
+        GradeDetail.objects.filter(score2__lt=15).update(score2=15)
+    # actualizar_nota2()
+
+    # ejercicio_52
+    def actualizar_extension():
+        GradeDetail.objects.filter(extension__lt=10).update(extension=10)
+    # actualizar_extension()
+
+    # ejercicio_53
+    def actualizar_observacion_aprobados():
+        GradeDetail.objects.filter(score1__gte=50).update(observacion="Aprobado")
+    # actualizar_observacion_aprobados()
+
+    # ejercicio_54
+    def actualizar_notas_por_periodo(periodo_id, nueva_nota):
+        GradeDetail.objects.filter(grade__period_id=periodo_id).update(score1=nueva_nota, score2=nueva_nota, extension=nueva_nota)
+    # actualizar_notas_por_periodo(1, 50)
+
+    # ejercicio_55
+    def eliminar_notas_por_estudiante(estudiante_id):
+        GradeDetail.objects.filter(student_id=estudiante_id).delete()
+    # eliminar_notas_por_estudiante(1)
+
+    # ejercicio_56
+    def eliminar_logicamente_notas_por_estudiante(estudiante_id):
+        GradeDetail.objects.filter(student_id=estudiante_id).update(state='inactive')
+    # eliminar_logicamente_notas_por_estudiante(1)
+
+    # ejercicio_57
+    def eliminar_notas_por_periodo(periodo_id):
+        GradeDetail.objects.filter(grade__period_id=periodo_id).delete()
+    # eliminar_notas_por_periodo(1)
+
+    # ejercicio_58
+    def eliminar_logicamente_notas_por_periodo(periodo_id):
+        GradeDetail.objects.filter(grade__period_id=periodo_id).update(state='inactive')
+    # eliminar_logicamente_notas_por_periodo(1)
+
+    # ejercicio_59
+    def eliminar_notas_con_nota1_menor_10():
+        GradeDetail.objects.filter(score1__lt=10).delete()
+    # eliminar_notas_con_nota1_menor_10()
+
+    # ejercicio_60
+    def crear_nota(estudiante_id, periodo_id, profesor_id, asignatura_id, score1, score2, extension):
+        user = User.objects.get(id=1)
+        estudiante = Student.objects.get(id=estudiante_id)
+        periodo = Period.objects.get(id=periodo_id)
+        profesor = Professor.objects.get(id=profesor_id)
+        asignatura = Subject.objects.get(id=asignatura_id)
+
+        grade = Grade.objects.create(
+            user=user,
+            period=periodo,
+            subject=asignatura,
+            professor=profesor
+        )
+
+        GradeDetail.objects.create(
+            user=user,
+            grade=grade,
+            student=estudiante,
+            score1=score1,
+            score2=score2,
+            extension=extension
+        )
+# crear_nota(1, 1, 1, 1, 9.0, 8.5, 7.0)
